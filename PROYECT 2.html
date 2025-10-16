@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="this is a description of the html file">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil</title>
+    <link rel="stylesheet" href="estyles.css">
+    <link href="https://fonts.google.com/specimen/Bitcount+Prop+Single+Ink">
+</head>
+<body>
+
+<header class="shadow">
+    <div class="container-logo">
+        <img src="c:\Users\Computadora28-SC1\Downloads\Captura.JPG" alt="">
+    </div>
+    <div >
+        <button id ="btn-dark-mode"> dark mode </button>
+    </div>
+</header>
+
+<section class="main-container">
+    <p>Active theory</p>
+    <h1>Rick and Morty</h1>
+    <span>television & file/ Nominee</span>
+</section>
+
+<div class="search">
+    <input class="shadow" type="text" placeholder="buscar personaje">
+    <button>buscar</button>
+</div>
+
+<div id="personajes" class="personajes-container">
+    </section>
+     <button id="btn-load-more">
+        cargar mas personajes
+     </button>
+</div>
+</body>
+
+<script>
+    let info_pages = null
+
+    function renderLoader(){
+        const contenedor = document.getElementById('personajes')
+        const loader = document.createElement('div')
+        loader.setAttribute ('id','loader')
+        loader.appendChild(document.createTextNode('cargando...'))
+        contenedor.appendChild(loader)
+    }
+
+    function hiddenLoader(){
+        const contenedor = document.getElementById('personajes')
+        const loader = document.getElementById('loader')
+        contenedor.removeChild(loader)
+    }
+    async function obtener_personaje(page=1) {
+        const url = "https://rickandmortyapi.com/api/character";
+        renderLoader()
+        const response = await fetch(url)
+            .then(res => res.json())
+            .catch(err => console.log(err));
+
+        const personajes = response.results;
+        info_pages=response?.info_pages
+        console.log('variable response', info_pages)
+        console.log("array", personajes);
+
+        const contenedor = document.getElementById("personajes");
+
+        personajes.forEach((element) => {
+            const contenedor_personaje = document.createElement("div");
+            const imagen = document.createElement("img");
+            imagen.src = element.image; 
+            imagen.alt = element.name; 
+
+            contenedor_personaje.appendChild(imagen); 
+            contenedor.appendChild(contenedor_personaje); 
+        });
+        hiddenLoader()
+    }
+    function loadMore(){
+        console.log ('load more');
+    }
+    const btn= document.getElementById('btn-load-more');
+    btn.addEventListener ('click', loadMore)
+    obtener_personaje();
+    const darkModeButton= document.getElementById ('btn-dark-mode')
+    function toggleDarkMode(){
+        document.body.classList.toggle ('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    darkModeButton.textContent = 'light mode'; 
+  } else {
+    darkModeButton.textContent = 'dark mode'; 
+  }
+}
+    darkModeButton .addEventListener('click', toggleDarkMode)
+</script>
+</html>
